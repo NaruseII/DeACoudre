@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DAC:jar">
+    <output-path>$PROJECT_DIR$/../../Desktop/mon serveur TEST/SERVEUR/Serveur-1.18/plugins</output-path>
+    <root id="archive" name="DAC.jar">
+      <element id="module-output" name="DAC" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../API/NaruseAPI/out/artifacts/NaruseAPI/NaruseAPI.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../API/SecondThreadParticleAPI/out/artifacts/NaruseSpigotAPI/NaruseSpigotAPI.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
