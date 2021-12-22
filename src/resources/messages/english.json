@@ -1,0 +1,42 @@
+{
+  "youAlreadyAreInAnArena": "§cYou already are in an arena.",
+  "gameAlreadyStarted": "§cGame already started.",
+  "gameFull": "§cGame full.",
+  "playerJoined": "§e{player}§a joins the game.",
+  "leaveItemName": "§cLeave",
+  "sign": {
+    "closed": "§cClosed",
+    "ready": "§aReady",
+    "missing": "§4{missing} missing",
+    "join": "§aJoin",
+    "inGame": "§4In game"
+  },
+  "leaveArena": "§e{player} §cleaves the game.",
+  "gameStarts": "§aThe game starts.",
+  "successfulJump": "§aSuccessful jump.",
+  "youAreNextToJump": "§bYou are the next to jump",
+  "yourTurn": "§aIt is your turn to jump!",
+  "jumperLoseCauseTime": "§e{player} §cdid not jump in time!",
+  "madeAPerfect": "§e{player} §dhas successfully completed a dé à coudre and won a life!",
+  "fail": "§e{player} §cfailed!",
+  "failAndLoseALife": "§e{player} §cfailed and lost a life!",
+  "gameClosed": "§cArena closed.",
+  "needAnUpdate": "§4§lHey! §cThe Dé à Coudre found an update on Spigot. You currently run version §d{currentVersion}§c but §d{newVersion}§c is available. §c\nDownload it there: §d{url}§c.",
+  "winsThisGame": "§e{player} §6wins this game with §d{lives} {lifePleuralOrSingular}§6!",
+  "theyWinThisGame": "§e{players} §6win this game with §d{lives} {lifePleuralOrSingular}§6!",
+  "and": "and",
+  "lifePleural": "lives",
+  "lifeSingular": "life",
+  "statsInvName": "§5§l{player}'s statistics",
+  "closeInventory": "§cClose",
+  "inventory": {
+    "wins": "§a§lGames Won : {wins}",
+    "loses": "§c§lGames Lost : {loses}",
+    "jumps": "§e§lJumps : {jumps}",
+    "games": "§e§lGames Played : {games}",
+    "fails": "§c§lJumps Failed : {fails}",
+    "perfects": "§6§lDé à Coudre : {perfects}"
+  },
+  "hologramFormat": "§6#{rank} §e§l{name} §7- §a{points} points",
+  "hologramTitle": "§6 ---- Players Ranking ----"
+}

@@ -1,0 +1,42 @@
+{
+  "youAlreadyAreInAnArena": "§cVous êtes déjà dans une autre partie.",
+  "gameAlreadyStarted": "§cLa partie est déjà en cours.",
+  "gameFull": "§cLa partie est pleine.",
+  "playerJoined": "§e{player}§a rejoint la partie.",
+  "leaveItemName": "§cQuitter",
+  "sign": {
+    "closed": "§cFermé",
+    "ready": "§aPrêt",
+    "missing": "§4{missing} manquants",
+    "join": "§aRejoindre",
+    "inGame": "§4En jeu"
+  },
+  "leaveArena": "§e{player} §cquitte la partie.",
+  "gameStarts": "§aLa partie commence.",
+  "successfulJump": "§aSaut réussi.",
+  "youAreNextToJump": "§bVous êtes le prochain à sauter",
+  "yourTurn": "§aC'est à toi de sauter !",
+  "jumperLoseCauseTime": "§e{player} §cn'a pas sauté à temps !",
+  "madeAPerfect": "§e{player} §da reussi un dé à coudre et remporte une vie !",
+  "fail": "§e{player} §ca échoué !",
+  "failAndLoseALife": "§e{player} §ca achoué et perdu une vie !",
+  "gameClosed": "§cArène fermée.",
+  "needAnUpdate": "§4§lHey! §cLe Spleef a trouvé une mise à jour sur Spigot. Tu possède actuellement la version §d{currentVersion}§c mais la §d{newVersion}§c est disponible. §c\nTu peux la télécharger ici: §d{url}§c.",
+  "winsThisGame": "§e{player} §6remporte cette partie avec §d{lives} {lifePleuralOrSingular}§6! ",
+  "theyWinThisGame": "§e{players} §6remportent cette partie avec §d{lives} {lifePleuralOrSingular}§6! ",
+  "and": "et",
+  "lifePleural": "vies",
+  "lifeSingular": "vie",
+  "statsInvName": "§5§lStatistiques de {player}",
+  "closeInventory": "§cFermer",
+  "inventory": {
+    "wins": "§a§lParties Gagnées : {wins}",
+    "loses": "§c§lParties Perdues : {loses}",
+    "jumps": "§e§lSauts : {jumps}",
+    "games": "§e§lParties Jouées : {games}",
+    "fails": "§c§lSauts Ratés : {fails}",
+    "perfects": "§6§lDé à Coudre : {perfects}"
+  },
+  "hologramFormat": "§6#{rank} §e§l{name} §7- §a{points} points",
+  "hologramTitle": "§6 ---- Classement des Joueurs ----"
+}
