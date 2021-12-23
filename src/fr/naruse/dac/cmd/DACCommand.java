@@ -272,6 +272,9 @@ public class DACCommand implements CommandExecutor {
             MessageManager.init(this.pl);
             Constant.postInit(this.pl);
             ExternalPlugins.init(this.pl);
+            if(ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN != null){
+                ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN.reload();
+            }
             return this.sendMessage(sender, "§aPlugin reloaded.");
         }
 

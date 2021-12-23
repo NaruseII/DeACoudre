@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerData {
@@ -17,6 +18,7 @@ public class PlayerData {
     private Location lastLocation;
     private GameMode gameMode;
     private Scoreboard lastScoreboard;
+    private ItemStack itemStack;
 
     public PlayerData(Player p) {
         this.p = p;
@@ -62,5 +64,13 @@ public class PlayerData {
 
     public Location getLastLocation() {
         return lastLocation;
+    }
+
+    public void setCurrentBlock(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
+    public ItemStack getCurrentBlock() {
+        return this.itemStack;
     }
 }

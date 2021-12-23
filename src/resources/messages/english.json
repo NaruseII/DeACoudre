@@ -38,5 +38,10 @@
     "perfects": "§6§lDé à Coudre : {perfects}"
   },
   "hologramFormat": "§6#{rank} §e§l{name} §7- §a{points} points",
-  "hologramTitle": "§6 ---- Players Ranking ----"
+  "hologramTitle": "§6 ---- Players Ranking ----",
+  "blockChoiceInvTitle": "§5§lBlock Choice - §b§l{page}",
+  "back": "§cClose",
+  "next": "§aNext Page",
+  "previous": "§3Previous Page",
+  "blockChoiceItemName": "§9§lBlock Choice"
 }

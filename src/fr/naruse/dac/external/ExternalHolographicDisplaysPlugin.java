@@ -119,6 +119,7 @@ public class ExternalHolographicDisplaysPlugin {
 
         if(this.location != null && GameSettings.HOLOGRAM.getValue()){
             this.hologram = HologramsAPI.createHologram(pl, this.location);
+            this.millis = 0;
         }
     }
 

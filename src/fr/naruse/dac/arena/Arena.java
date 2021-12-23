@@ -20,6 +20,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 
@@ -64,6 +66,7 @@ public class Arena extends RunnerPerSecond {
         this.blockRegionList = blockRegionList;
 
         this.scoreboardSign = new ScoreboardSign<>(pl, DisplaySlot.SIDEBAR, "§6§l"+name);
+        this.scoreboardSign.disableOnlyOneScore();
 
         this.start();
 
@@ -76,6 +79,7 @@ public class Arena extends RunnerPerSecond {
     public void runPerSecond() {
 
         if (this.status.isActive(ArenaStatus.Status.WAITING)) {
+
             if(this.currentTimer <= 0){
                 this.startGame();
             }else{
@@ -84,11 +88,26 @@ public class Arena extends RunnerPerSecond {
                 }else{
                     this.currentTimer = GameSettings.WAITING_TIMER.getValue();
                 }
+
+                this.playerInGame.forEach(player -> {
+                    PlayerData playerData = ArenaCollection.PLAYER_DATA_BY_PLAYER.get(player);
+                    if(playerData != null && playerData.getCurrentBlock() == null && !Constant.AUTHORIZED_BLOCKS.isEmpty()){
+                        ItemStack itemStack = Constant.AUTHORIZED_BLOCKS.get(Constant.RANDOM.nextInt(Constant.AUTHORIZED_BLOCKS.size())).clone();
+                        ItemMeta meta = itemStack.getItemMeta();
+                        meta.setDisplayName(MessageManager.get("blockChoiceItemName"));
+                        itemStack.setItemMeta(meta);
+
+                        ThreadGlobal.runSync(() -> player.getInventory().setItem(4, itemStack));
+                    }
+                });
+
             }
         }else{
             if(this.currentTimer <= 0){
+                if(this.currentJumper != null){
+                    this.sendGameMessage(MessageManager.Builder.init("jumperLoseCauseTime").replace("player", this.currentJumper.getName()).build());
+                }
                 this.makeJumperLoose();
-                this.sendGameMessage(MessageManager.Builder.init("jumperLoseCauseTime").replace("player", this.currentJumper.getName()).build());
             }else{
                 this.currentTimer--;
             }
@@ -183,7 +202,20 @@ public class Arena extends RunnerPerSecond {
                 }
 
                 if(!set.isEmpty()){
-                    ThreadGlobal.runSync(() -> set.forEach(block -> block.setType(isPerfect ? Material.EMERALD_BLOCK : Material.STONE))); // Setting blocks
+
+                    Material[] material = new Material[]{Material.STONE};
+                    byte[] data = {0};
+
+                    PlayerData playerData = ArenaCollection.PLAYER_DATA_BY_PLAYER.get(this.currentJumper);
+                    if(playerData != null && playerData.getCurrentBlock() != null){
+                        material[0] = playerData.getCurrentBlock().getType();
+                        data[0] = playerData.getCurrentBlock().getData().getData();
+                    }
+
+                    ThreadGlobal.runSync(() -> set.forEach(block -> {
+                        block.setType(isPerfect ? Material.EMERALD_BLOCK : material[0]);
+                        block.setData(isPerfect ? (byte) 0 : data[0]);
+                    })); // Setting blocks
                 }
                 this.nextJumper();
 
@@ -247,15 +279,31 @@ public class Arena extends RunnerPerSecond {
         this.sendGameMessage(MessageManager.get("gameStarts"));
         this.nextJumper();
 
-        this.playerInGame.forEach(player -> ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player).increment(StatisticType.GAMES));
+        this.playerInGame.forEach(player -> {
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player).increment(StatisticType.GAMES);
+            PlayerData playerData = ArenaCollection.PLAYER_DATA_BY_PLAYER.get(player);
+            if(playerData != null && playerData.getCurrentBlock() == null){
+                if(!Constant.AUTHORIZED_BLOCKS.isEmpty()){
+                    ItemStack itemStack = Constant.AUTHORIZED_BLOCKS.get(Constant.RANDOM.nextInt(Constant.AUTHORIZED_BLOCKS.size())).clone();
+                    ItemMeta meta = itemStack.getItemMeta();
+                    meta.setDisplayName(MessageManager.get("blockChoiceItemName"));
+                    itemStack.setItemMeta(meta);
+
+                    player.getInventory().setItem(4, itemStack);
+                    playerData.setCurrentBlock(itemStack);
+                }
+
+            }
+        });
     }
 
     public void nextJumper() {
-        if (this.status.isActive(ArenaStatus.Status.WAITING)) {
+        if (this.status.isActive(ArenaStatus.Status.WAITING) || this.playerInGame.isEmpty()) {
             return;
         }
         if(this.currentJumper != null){
-            ThreadGlobal.runSync(() -> this.currentJumper.teleport(this.arenaLocation));
+            Player currentJumper = this.currentJumper;
+            ThreadGlobal.runSync(() -> currentJumper.teleport(this.arenaLocation));
             this.currentJumper.sendMessage(this.getFormattedName() + MessageManager.get("successfulJump"));
             this.playerInGame.remove(this.currentJumper);
             this.playerInGame.add(this.currentJumper);
@@ -317,10 +365,10 @@ public class Arena extends RunnerPerSecond {
                 ExternalPlugins.EXTERNAL_VAULT_PLUGIN.deposit(this.currentJumper, GameSettings.LOOSE_VAULT_REWARDS.getValue());
             }
 
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.LOSES);
+
             this.removePlayer(this.currentJumper, false);
             this.nextJumper();
-
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.LOSES);
         });
     }
 
@@ -372,6 +420,7 @@ public class Arena extends RunnerPerSecond {
             ArenaCollection.PLAYER_DATA_BY_PLAYER.put(p, playerData = new PlayerData(p));
         }
         playerData.setPlayerData();
+        playerData.setCurrentBlock(null);
 
         p.setGameMode(GameMode.SURVIVAL);
         this.scoreboardSign.apply(p);
@@ -448,7 +497,7 @@ public class Arena extends RunnerPerSecond {
         this.scoreboardSign.clearLines();
         for (int i = 0; i < (this.playerInGame.size() > 15 ? 15 : this.playerInGame.size()); i++) {
             Player player = this.playerInGame.getByIndex(i);
-            this.scoreboardSign.setScore((this.currentJumper == player ? "§a" : "§7")+player.getName(), this.playerLives.get(player));
+            this.scoreboardSign.setScore((this.currentJumper == player ? "§a§l» " : "§7")+player.getName(), this.playerLives.get(player));
         }
     }
 
@@ -566,22 +615,58 @@ public class Arena extends RunnerPerSecond {
     }
 
     public Location getDivingLocation() {
-        return divingLocation;
+        return this.divingLocation;
     }
 
     public Location getLobbyLocation() {
-        return lobbyLocation;
+        return this.lobbyLocation;
     }
 
     public Location getArenaLocation() {
-        return arenaLocation;
+        return this.arenaLocation;
     }
 
     public Location getEndLocation() {
-        return endLocation;
+        return this.endLocation;
     }
 
     public CollectionManager.List<Player> getPlayerInGame() {
         return this.playerInGame.clone();
+    }
+
+    public Configuration getConfiguration() {
+        return this.configuration;
+    }
+
+    public CollectionManager.List<Sign> getSigns() {
+        return this.signs;
+    }
+
+    public int getCurrentTimer() {
+        return this.currentTimer;
+    }
+
+    public List<Block> getBlockRegionList() {
+        return this.blockRegionList;
+    }
+
+    public CollectionManager.List<Block> getBlockToReplaceByLava() {
+        return this.blockToReplaceByLava;
+    }
+
+    public CollectionManager.List<Block> getBlockToReplaceByWater() {
+        return this.blockToReplaceByWater;
+    }
+
+    public CollectionManager.Map<Player, Integer> getPlayerLives() {
+        return this.playerLives;
+    }
+
+    public Player getCurrentJumper() {
+        return this.currentJumper;
+    }
+
+    public ScoreboardSign<DACPlugin> getScoreboardSign() {
+        return this.scoreboardSign;
     }
 }
