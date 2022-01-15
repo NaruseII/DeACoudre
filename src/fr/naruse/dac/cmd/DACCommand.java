@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DACCommand implements CommandExecutor {
@@ -66,6 +67,28 @@ public class DACCommand implements CommandExecutor {
                 }
 
                 arena.addPlayer((Player) sender, false);
+
+                return true;
+            }
+
+            // JOIN QUEUE
+            if(args[0].equalsIgnoreCase("joinQueue")){
+
+                final Arena[] arena = {null};
+                ArenaCollection.ARENAS.clone().forEach(arena1 -> {
+                    if(arena[0] == null){
+                        if(arena1.getStatus().isActive(ArenaStatus.Status.WAITING)){
+                            arena[0] = arena1;
+                        }
+                    }else if(arena1.getStatus().isActive(ArenaStatus.Status.WAITING) && arena1.getPlayerInGameSize() < arena1.getMax() && arena1.getPlayerInGameSize() > arena[0].getPlayerInGameSize()){
+                        arena[0] = arena1;
+                    }
+                });
+
+                if(arena[0] == null){
+                    return this.sendMessage(sender, MessageManager.get("arenaNotFound"));
+                }
+                arena[0].addPlayer((Player) sender, false);
 
                 return true;
             }
@@ -546,6 +569,7 @@ public class DACCommand implements CommandExecutor {
 
         this.sendMessage(sender, "§6/§7dac stats <[Player]>");
         this.sendMessage(sender, "§6/§7dac join <DAC Name>");
+        this.sendMessage(sender, "§6/§7dac joinQueue");
 
         if(!sender.hasPermission("dac.commands")){
             return true;

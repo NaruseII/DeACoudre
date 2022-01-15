@@ -63,6 +63,16 @@ public class InventoryBlockChoice extends AbstractInventory {
             this.p.closeInventory();
             return;
         }else if(itemStack != null && itemStack.getType() != Material.STAINED_GLASS_PANE){
+
+            if(Constant.BLOCK_PERMISSION_MAP.containsKey(itemStack)){
+                String permission = Constant.BLOCK_PERMISSION_MAP.get(itemStack);
+
+                if(!"null".equalsIgnoreCase(permission) && !player.hasPermission(permission)){
+                    player.sendMessage(MessageManager.get("blockPermissionDenied"));
+                    return;
+                }
+            }
+
             PlayerData playerData = ArenaCollection.PLAYER_DATA_BY_PLAYER.get(p);
             if(playerData != null){
                 player.closeInventory();

@@ -1,5 +1,6 @@
 package fr.naruse.dac.main;
 
+import fr.naruse.api.NaruseAPIDownloader;
 import fr.naruse.api.logging.GlobalLogger;
 import fr.naruse.api.main.APIInit;
 import fr.naruse.dac.arena.ArenaCollection;
@@ -24,7 +25,9 @@ public class DACPlugin extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
 
-        APIInit.init(this);
+        NaruseAPIDownloader.checkConfigAPI(this);
+        NaruseAPIDownloader.checkSecondThreadAPI(this);
+
         APIInit.disableEntityAsyncListAdd();
         GlobalLogger.setPluginLogger(this.getLogger());
 
@@ -56,7 +59,6 @@ public class DACPlugin extends JavaPlugin {
         if(ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN != null){
             ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN.onDisable();
         }
-        APIInit.shutdown();
         ArenaCollection.ARENAS.forEach(arena -> arena.shutdown());
     }
 

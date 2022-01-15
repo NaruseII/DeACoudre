@@ -43,5 +43,7 @@
   "back": "§cFermer",
   "next": "§aPage Suivant",
   "previous": "§3Page Précédente",
-  "blockChoiceItemName": "§9§lChoix du Bloc"
+  "blockChoiceItemName": "§9§lChoix du Bloc",
+  "blockPermissionDenied": "§cVous n'avez pas la permission de choisir ce bloc.",
+  "arenaNotFound": "§cAucune arène de disponible."
 }

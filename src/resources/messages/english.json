@@ -43,5 +43,7 @@
   "back": "§cClose",
   "next": "§aNext Page",
   "previous": "§3Previous Page",
-  "blockChoiceItemName": "§9§lBlock Choice"
+  "blockChoiceItemName": "§9§lBlock Choice",
+  "blockPermissionDenied": "§cYou do not have the permission to use this block.",
+  "arenaNotFound": "§cNo arena available."
 }

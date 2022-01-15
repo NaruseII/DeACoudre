@@ -55,7 +55,7 @@ public class GameSettings<T> {
         this.path = prettyName;
         this.value = defaultValue;
 
-        Configuration.ConfigurationSection section = Constant.CONFIGURATION.getSection("gameSettings");
+        Configuration.ConfigurationSection section = Constant.CONFIGURATION.contains("gameSettings") ? Constant.CONFIGURATION.getSection("gameSettings") : Constant.CONFIGURATION.newSection("gameSettings");
         String[] args = path.split("\\.");
 
         for (int i = 0; i < args.length-1; i++) {
