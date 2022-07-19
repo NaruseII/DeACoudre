@@ -1,5 +1,5 @@
 name: DeACoudre
-version: 2.0.1
+version: 2.0.2
 main: fr.naruse.dac.main.DACPlugin
 author: Naruse
 softdepend:
@@ -8,5 +8,6 @@ softdepend:
   - Vault
   - SecondThreadAPI
   - NaruseAPI
+  - DecentHolograms
 commands:
   dac:

@@ -10,6 +10,7 @@ public class PlayerStatistics {
 
     private final String uuid;
     private final Map<StatisticType, Integer> map = Maps.newHashMap();
+    private final Map<StatisticType, Long> lastIncrementMap = Maps.newHashMap();
 
     public PlayerStatistics(UUID uuid) {
         this.uuid = uuid.toString();
@@ -45,8 +46,15 @@ public class PlayerStatistics {
     }
 
     public void increment(StatisticType statisticType){
+        Long l = this.lastIncrementMap.get(statisticType);
+        if(l != null && System.currentTimeMillis()-l <= 1000){
+            return;
+        }
+
         this.map.put(statisticType, this.map.get(statisticType)+1);
         Constant.DATABASE_MANAGER.save(this.uuid, this.map);
+
+        this.lastIncrementMap.put(statisticType, System.currentTimeMillis());
     }
 
     public void set(StatisticType statisticType, int value){
@@ -62,5 +70,12 @@ public class PlayerStatistics {
         for (StatisticType value : StatisticType.values()) {
             this.set(value, 0);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerStatistics{" +
+                "map=" + map +
+                '}';
     }
 }

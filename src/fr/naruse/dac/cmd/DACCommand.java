@@ -298,6 +298,9 @@ public class DACCommand implements CommandExecutor {
             if(ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN != null){
                 ExternalPlugins.EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN.reload();
             }
+            if(ExternalPlugins.EXTERNAL_DECENT_HOLOGRAM_PLUGIN != null){
+                ExternalPlugins.EXTERNAL_DECENT_HOLOGRAM_PLUGIN.reload();
+            }
             return this.sendMessage(sender, "§aPlugin reloaded.");
         }
 
@@ -515,7 +518,7 @@ public class DACCommand implements CommandExecutor {
             }
 
             OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-            if(player == null || !ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.contains(player)){
+            if(player == null || !ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.contains(player.getUniqueId())){
                 return this.sendMessage(sender, "§cPlayer not found.");
             }
 
@@ -528,7 +531,7 @@ public class DACCommand implements CommandExecutor {
                 return this.sendMessage(sender, "§cArgument not recognized.");
             }
 
-            PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player);
+            PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player.getUniqueId());
             playerStatistics.set(statisticType, value);
 
             return this.sendMessage(sender, "§aStatistic set.");

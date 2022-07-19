@@ -12,6 +12,7 @@ public class ExternalPlugins {
     public static ExternalVaultPlugin EXTERNAL_VAULT_PLUGIN;
     public static ExternalDBAPIPlugin EXTERNAL_DBAPI_PLUGIN;
     public static ExternalHolographicDisplaysPlugin EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN;
+    public static ExternalDecentHologramPlugin EXTERNAL_DECENT_HOLOGRAM_PLUGIN;
 
     public static void init(DACPlugin pl) {
         LOGGER.info("Loading...");
@@ -32,6 +33,11 @@ public class ExternalPlugins {
         if(pl.getServer().getPluginManager().getPlugin("HolographicDisplays") != null && EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN == null){
             LOGGER.info("'HolographicDisplays' found");
             EXTERNAL_HOLOGRAPHIC_DISPLAYS_PLUGIN = new ExternalHolographicDisplaysPlugin(pl);
+        }
+
+        if(pl.getServer().getPluginManager().getPlugin("DecentHolograms") != null && EXTERNAL_DECENT_HOLOGRAM_PLUGIN == null){
+            LOGGER.info("'DecentHolograms' found");
+            EXTERNAL_DECENT_HOLOGRAM_PLUGIN = new ExternalDecentHologramPlugin(pl);
         }
 
         LOGGER.info("Done");

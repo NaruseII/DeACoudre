@@ -33,7 +33,7 @@ public class InventoryStats extends AbstractInventory {
     @Override
     protected void initInventory(Inventory inventory) {
         this.setDecoration(Material.STAINED_GLASS_PANE, true);
-        PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(Bukkit.getOfflinePlayer(uuid));
+        PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.uuid);
 
         if(playerStatistics == null){
             inventory.setItem(4, this.buildItem(Material.BARRIER, 0, "§cNot found", false, null));

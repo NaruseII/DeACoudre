@@ -129,7 +129,7 @@ public class Arena extends RunnerPerSecond {
                     ExternalPlugins.EXTERNAL_VAULT_PLUGIN.deposit(winner, GameSettings.WIN_VAULT_REWARDS.getValue());
                 }
 
-                ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(winner).increment(StatisticType.WINS);
+                ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(winner.getUniqueId()).increment(StatisticType.WINS);
 
                 this.restart();
             }else if(this.playerInGame.size() == 0){
@@ -178,7 +178,7 @@ public class Arena extends RunnerPerSecond {
                         FireworkUtils.build(this.pl, this.currentJumper, 2);
                     }
 
-                    ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.PERFECTS);
+                    ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper.getUniqueId()).increment(StatisticType.PERFECTS);
                 }
 
                 for (int i = 0; i < 2; i++) { // Getting all above and below blocks
@@ -217,6 +217,9 @@ public class Arena extends RunnerPerSecond {
                         block.setData(isPerfect ? (byte) 0 : data[0]);
                     })); // Setting blocks
                 }
+
+                ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper.getUniqueId()).increment(StatisticType.JUMPS);
+
                 this.nextJumper();
 
                 this.checkArenaIsFilled();
@@ -257,7 +260,7 @@ public class Arena extends RunnerPerSecond {
             if(GameSettings.WIN_VAULT_REWARDS.getValue() > 0 && ExternalPlugins.EXTERNAL_VAULT_PLUGIN != null){
                 this.playerInGame.forEach(player -> {
                     ExternalPlugins.EXTERNAL_VAULT_PLUGIN.deposit(player, GameSettings.WIN_VAULT_REWARDS.getValue());
-                    ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player).increment(StatisticType.WINS);
+                    ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player.getUniqueId()).increment(StatisticType.WINS);
                 });
             }
 
@@ -277,10 +280,13 @@ public class Arena extends RunnerPerSecond {
     public void startGame() {
         this.status.setActive(ArenaStatus.Status.IN_GAME);
         this.sendGameMessage(MessageManager.get("gameStarts"));
-        this.nextJumper();
+
+        ThreadGlobal.runSync(() -> {
+            this.playerInGame.forEach(player -> player.teleport(this.arenaLocation));
+        });
 
         this.playerInGame.forEach(player -> {
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player).increment(StatisticType.GAMES);
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(player.getUniqueId()).increment(StatisticType.GAMES);
             PlayerData playerData = ArenaCollection.PLAYER_DATA_BY_PLAYER.get(player);
             if(playerData != null && playerData.getCurrentBlock() == null){
                 if(!Constant.AUTHORIZED_BLOCKS.isEmpty()){
@@ -295,6 +301,8 @@ public class Arena extends RunnerPerSecond {
 
             }
         });
+
+        this.nextJumper();
     }
 
     public void nextJumper() {
@@ -312,6 +320,7 @@ public class Arena extends RunnerPerSecond {
         this.currentJumper = this.playerInGame.getByIndex(0);
 
         ThreadGlobal.runSync(() -> {
+            this.currentJumper.setFallDistance(0);
             this.currentJumper.teleport(this.divingLocation);
             this.updateScoreboard();
         });
@@ -321,8 +330,6 @@ public class Arena extends RunnerPerSecond {
             this.playerInGame.getByIndex(1).sendTitle("", MessageManager.get("youAreNextToJump"));
         }
         this.currentTimer = GameSettings.JUMP_TIMER.getValue();
-
-        ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.JUMPS);
     }
 
     public void restart(){
@@ -365,8 +372,6 @@ public class Arena extends RunnerPerSecond {
                 ExternalPlugins.EXTERNAL_VAULT_PLUGIN.deposit(this.currentJumper, GameSettings.LOOSE_VAULT_REWARDS.getValue());
             }
 
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.LOSES);
-
             this.removePlayer(this.currentJumper, false);
             this.nextJumper();
         });
@@ -376,11 +381,14 @@ public class Arena extends RunnerPerSecond {
         if(GameSettings.FIREWORKS.getValue()){
             FireworkUtils.build(this.pl, this.currentJumper, 0);
         }
-        ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper).increment(StatisticType.FAILS);
+
+        ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper.getUniqueId()).increment(StatisticType.FAILS);
+        ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(this.currentJumper.getUniqueId()).increment(StatisticType.JUMPS);
+
         if(this.playerLives.get(this.currentJumper) <= 1){
             this.sendGameMessage(MessageManager.Builder.init("fail").replace("player", this.currentJumper.getName()).build());
             this.makeJumperLoose();
-        }else{
+        } else {
             this.playerLives.put(this.currentJumper, this.playerLives.get(this.currentJumper)-1);
             this.sendGameMessage(MessageManager.Builder.init("failAndLoseALife").replace("player", this.currentJumper.getName()).build());
             this.nextJumper();
@@ -489,7 +497,7 @@ public class Arena extends RunnerPerSecond {
         this.updateScoreboard();
 
         if (this.status.isActive(ArenaStatus.Status.IN_GAME)) {
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(p).increment(StatisticType.LOSES);
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(p.getUniqueId()).increment(StatisticType.LOSES);
         }
     }
 

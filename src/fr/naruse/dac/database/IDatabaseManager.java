@@ -13,7 +13,7 @@ public interface IDatabaseManager {
         GlobalLogger.Logger logger = new GlobalLogger.Logger("DatabaseManager");
         logger.info("Loading data...");
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.put(player, new PlayerStatistics(player.getUniqueId()));
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.put(player.getUniqueId(), new PlayerStatistics(player.getUniqueId()));
         }
         logger.info("Done");
     }

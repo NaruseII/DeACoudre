@@ -111,9 +111,9 @@ public class Listeners implements Listener {
         if(p.hasPermission("dac") && Updater.isUpdateAvailable()){
             Updater.sendMessage(p);
         }
-        PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(p);
+        PlayerStatistics playerStatistics = ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.get(p.getUniqueId());
         if(playerStatistics == null){
-            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.put(p, new PlayerStatistics(p.getUniqueId()));
+            ArenaCollection.PLAYER_STATISTICS_BY_PLAYER.put(p.getUniqueId(), new PlayerStatistics(p.getUniqueId()));
         }else{
             playerStatistics.reload();
         }

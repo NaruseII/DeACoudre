@@ -33,12 +33,9 @@ public class JsonDatabase implements IDatabaseManager{
         Configuration.ConfigurationSection section = this.configuration.getSection(uuid);
         Map<StatisticType, Integer> map = Maps.newHashMap();
 
-        map.put(StatisticType.PERFECTS, section.contains("perfects") ? section.getInt("perfects") : 0);
-        map.put(StatisticType.FAILS, section.contains("fails") ? section.getInt("fails") : 0);
-        map.put(StatisticType.LOSES, section.contains("loses") ? section.getInt("loses") : 0);
-        map.put(StatisticType.WINS, section.contains("wins") ? section.getInt("wins") : 0);
-        map.put(StatisticType.GAMES, section.contains("games") ? section.getInt("games") : 0);
-        map.put(StatisticType.JUMPS, section.contains("jumps" + "") ? section.getInt("jumps") : 0);
+        for (StatisticType statisticType : StatisticType.values()) {
+            map.put(statisticType, section.contains(statisticType.name()) ? section.getInt(statisticType.name()) : 0);
+        }
 
         sqlResponse.handleResponse(map);
     }
