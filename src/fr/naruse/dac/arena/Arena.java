@@ -22,10 +22,12 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class Arena extends RunnerPerSecond {
@@ -403,6 +405,11 @@ public class Arena extends RunnerPerSecond {
     }
 
     public boolean addPlayer(Player p, boolean force){
+        return addPlayer(p, force, false);
+    }
+
+    public boolean addPlayer(Player p, boolean force, boolean isGroup){
+
         if(ArenaCollection.ARENA_BY_PLAYER.contains(p)){
             p.sendMessage(this.getFormattedName() + MessageManager.get("youAlreadyAreInAnArena"));
             return false;

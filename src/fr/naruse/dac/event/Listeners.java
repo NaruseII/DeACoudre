@@ -21,9 +21,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 
 public class Listeners implements Listener {
 
@@ -120,6 +118,15 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
+    public void quit(PlayerQuitEvent e){
+        Player p = e.getPlayer();
+        Arena arena = ArenaCollection.ARENA_BY_PLAYER.get(p);
+        if(arena != null){
+            arena.removePlayer(p, true);
+        }
+    }
+
+    @EventHandler
     public void breakBlock(BlockBreakEvent e){
         this.cancelIfNeeded(e, e.getPlayer());
     }
@@ -139,6 +146,11 @@ public class Listeners implements Listener {
         if(e.getEntity() instanceof Player){
             this.cancelIfNeeded(e, (Player) e.getEntity());
         }
+    }
+
+    @EventHandler
+    public void throwItemEvent(PlayerDropItemEvent e){
+        this.cancelIfNeeded(e, e.getPlayer());
     }
 
     private void cancelIfNeeded(Cancellable e, Player p){

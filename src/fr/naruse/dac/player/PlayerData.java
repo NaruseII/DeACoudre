@@ -14,6 +14,7 @@ public class PlayerData {
 
     private boolean flying;
     private boolean allowFly;
+    private boolean invulnerable;
     private Inventory inventory;
     private Location lastLocation;
     private GameMode gameMode;
@@ -40,6 +41,7 @@ public class PlayerData {
         this.flying = this.p.isFlying();
         this.allowFly = this.p.getAllowFlight();
         this.lastLocation = this.p.getLocation();
+        this.invulnerable = this.p.isInvulnerable();
     }
 
     public void giveBackPlayerData(){
@@ -60,6 +62,7 @@ public class PlayerData {
         }
         this.p.setAllowFlight(this.allowFly);
         this.p.setFlying(this.flying);
+        this.p.setInvulnerable(this.invulnerable);
     }
 
     public Location getLastLocation() {

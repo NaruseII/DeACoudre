@@ -1,8 +1,8 @@
 package fr.naruse.dac.main;
 
+import fr.naruse.api.APIInit;
 import fr.naruse.api.NaruseAPIDownloader;
 import fr.naruse.api.logging.GlobalLogger;
-import fr.naruse.api.main.APIInit;
 import fr.naruse.dac.arena.ArenaCollection;
 import fr.naruse.dac.arena.ArenaManager;
 import fr.naruse.dac.cmd.DACCommand;
