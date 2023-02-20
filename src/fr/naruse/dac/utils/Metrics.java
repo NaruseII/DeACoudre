@@ -3,6 +3,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import fr.naruse.dac.arena.ArenaCollection;
+import fr.naruse.dac.main.DACPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -14,6 +16,9 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -87,7 +92,7 @@ public class Metrics {
      * @param pluginId The id of the plugin.
      *                 It can be found at <a href="https://bstats.org/what-is-my-plugin-id">What is my plugin id?</a>
      */
-    public Metrics(Plugin plugin, int pluginId) {
+    public Metrics(DACPlugin plugin, int pluginId) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
         }
@@ -149,6 +154,8 @@ public class Metrics {
                 startSubmitting();
             }
         }
+
+        this.addCustomChart(new Metrics.SingleLineChart("arena_count", () -> ArenaCollection.ARENAS.size()));
     }
 
     /**

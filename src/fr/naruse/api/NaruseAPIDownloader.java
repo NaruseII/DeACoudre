@@ -109,7 +109,6 @@ public class NaruseAPIDownloader {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return true;
